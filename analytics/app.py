@@ -21,6 +21,12 @@ def health_check():
 @app.route("/readiness_check")
 def readiness_check():
     try:
+        app.logger.info(os.environ["DB_USERNAME"])
+        app.logger.info(os.environ["DB_PASSWORD"])
+        app.logger.info(os.environ["DB_HOST"])
+        app.logger.info(os.environ["DB_PORT"])
+        app.logger.info(os.environ["DB_NAME"])
+
         count = db.session.execute(text("SELECT COUNT(*) FROM tokens")).scalar()
     except Exception as e:
         app.logger.error(e)
