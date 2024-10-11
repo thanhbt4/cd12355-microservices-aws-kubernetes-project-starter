@@ -52,4 +52,5 @@ spec:
           valueFrom:
             secretKeyRef:
               name: db-secret
+              key: thanhbt4
       restartPolicy: Always
