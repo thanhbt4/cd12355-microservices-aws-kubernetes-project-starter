@@ -21,12 +21,6 @@ def health_check():
 @app.route("/readiness_check")
 def readiness_check():
     try:
-        print("DB_USERNAME:", os.environ["DB_USERNAME"])
-        print("DB_PASSWORD:", os.environ["DB_PASSWORD"])
-        print("DB_HOST:", os.environ["DB_HOST"])
-        print("DB_PORT:", os.environ["DB_PORT"])
-        print("DB_NAME:", os.environ["DB_NAME"])
-
         app.logger.info(os.environ["DB_USERNAME"])
         app.logger.info(os.environ["DB_PASSWORD"])
         app.logger.info(os.environ["DB_HOST"])
