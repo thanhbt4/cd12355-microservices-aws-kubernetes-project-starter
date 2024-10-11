@@ -7,7 +7,7 @@ from flask import jsonify
 from sqlalchemy import and_, text
 from random import randint
 
-from config import app, db
+# from config import app, db
 
 
 port_number = int(os.environ.get("APP_PORT", 5153))
@@ -21,13 +21,13 @@ def health_check():
 @app.route("/readiness_check")
 def readiness_check():
     try:
-        app.logger.info(os.environ["DB_USERNAME"])
-        app.logger.info(os.environ["DB_PASSWORD"])
-        app.logger.info(os.environ["DB_HOST"])
-        app.logger.info(os.environ["DB_PORT"])
-        app.logger.info(os.environ["DB_NAME"])
+        print("DB_USERNAME:", os.environ["DB_USERNAME"])
+        print("DB_PASSWORD:", os.environ["DB_PASSWORD"])
+        print("DB_HOST:", os.environ["DB_HOST"])
+        print("DB_PORT:", os.environ["DB_PORT"])
+        print("DB_NAME:", os.environ["DB_NAME"])
 
-        count = db.session.execute(text("SELECT COUNT(*) FROM tokens")).scalar()
+        # count = db.session.execute(text("SELECT COUNT(*) FROM tokens")).scalar()
     except Exception as e:
         app.logger.error(e)
         return "failed", 500
@@ -35,28 +35,28 @@ def readiness_check():
         return "ok"
 
 
-def get_daily_visits():
-    with app.app_context():
-        result = db.session.execute(text("""
-        SELECT Date(created_at) AS date,
-            Count(*)         AS visits
-        FROM   tokens
-        WHERE  used_at IS NOT NULL
-        GROUP  BY Date(created_at)
-        """))
+# def get_daily_visits():
+#     with app.app_context():
+#         result = db.session.execute(text("""
+#         SELECT Date(created_at) AS date,
+#             Count(*)         AS visits
+#         FROM   tokens
+#         WHERE  used_at IS NOT NULL
+#         GROUP  BY Date(created_at)
+#         """))
+#
+#         response = {}
+#         for row in result:
+#             response[str(row[0])] = row[1]
+#
+#         app.logger.info(response)
+#
+#     return response
 
-        response = {}
-        for row in result:
-            response[str(row[0])] = row[1]
 
-        app.logger.info(response)
-
-    return response
-
-
-@app.route("/api/reports/daily_usage", methods=["GET"])
-def daily_visits():
-    return jsonify(get_daily_visits())
+# @app.route("/api/reports/daily_usage", methods=["GET"])
+# def daily_visits():
+#     return jsonify(get_daily_visits())
 
 
 @app.route("/api/reports/user_visits", methods=["GET"])
@@ -84,7 +84,7 @@ def all_user_visits():
 
 
 scheduler = BackgroundScheduler()
-job = scheduler.add_job(get_daily_visits, 'interval', seconds=30)
+# job = scheduler.add_job(get_daily_visits, 'interval', seconds=30)
 scheduler.start()
 
 if __name__ == "__main__":
